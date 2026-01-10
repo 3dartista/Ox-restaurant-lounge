@@ -23,7 +23,7 @@ const AdminDashboard: React.FC = () => {
 
     const fetchBookings = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/reservations");
+        const res = await fetch("https://ox-restaurant-lounge.onrender.com/api/reservations");
         if (!res.ok) throw new Error("Failed to fetch reservations");
         const data: Reservation[] = await res.json();
         setBookings(data);
@@ -42,7 +42,7 @@ const AdminDashboard: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this reservation?")) return;
     try {
-      const res = await fetch(`http://localhost:4000/api/reservations/${id}`, {
+      const res = await fetch(`https://ox-restaurant-lounge.onrender.com/api/reservations/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete reservation");

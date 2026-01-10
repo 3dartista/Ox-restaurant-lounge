@@ -7,7 +7,12 @@ import reservationRoutes from "./routes/reservationRoutes.js";
 const app = express();
 
 // Middleware
-app.use(cors());
+// Add your specific Vercel URL here
+app.use(cors({
+  origin: "https://ox-restaurant-lounge.vercel.app", 
+  methods: ["GET", "POST", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
