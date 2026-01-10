@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
       to: '3dflash01@gmail.com',
       subject: 'New Reservation - OX Restaurant',
       // The backticks (`) and ${} are essential here!
-      html: <p>New booking for <strong>${req.body.name}</strong> on ${req.body.date} at ${req.body.time}.</p>
+      html: `<p>New booking for <strong>${req.body.name}</strong> on ${req.body.date} at ${req.body.time}.</p>`
     });
 
     res.status(201).json(newReservation);
