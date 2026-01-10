@@ -1,20 +1,39 @@
 import express from "express";
-import { createReservation } from "../controllers/reservationController.js";
 import Reservation from "../models/Reservation.js";
+import { Resend } from "resend";
 
 const router = express.Router();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /* =======================
    Routes
 ======================= */
 
-// Create a new reservation
-router.post("/", createReservation);
+// 1. CREATE Reservation & SEND Email (Combined into one)
+router.post("/", async (req, res) => {
+  try {
+    const newReservation = new Reservation(req.body);
+    await newReservation.save();
 
-// Get all reservations
+    // Send the email notification
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: '3dflash01@gmail.com',
+      subject: 'New Reservation - OX Restaurant',
+      // The backticks (`) and ${} are essential here!
+      html: <p>New booking for <strong>${req.body.name}</strong> on ${req.body.date} at ${req.body.time}.</p>
+    });
+
+    res.status(201).json(newReservation);
+  } catch (error) {
+    console.error("Save/Email Error:", error);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// 2. GET all reservations
 router.get("/", async (req, res) => {
   try {
-    // Sort by createdAt descending so newest bookings appear first
     const reservations = await Reservation.find().sort({ createdAt: -1 });
     res.status(200).json(reservations);
   } catch (error) {
@@ -23,7 +42,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a single reservation by ID
+// 3. GET a single reservation by ID
 router.get("/:id", async (req, res) => {
   try {
     const reservation = await Reservation.findById(req.params.id);
@@ -36,7 +55,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Delete a reservation
+// 4. DELETE a reservation
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Reservation.findByIdAndDelete(req.params.id);
