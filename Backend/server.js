@@ -9,7 +9,7 @@ const app = express();
 // Middleware
 // Add your specific Vercel URL here
 app.use(cors({
-  origin: "https://ox-restaurant-lounge.vercel.app", 
+  origin: "https://ox-restaurant-lounge-osw6.vercel.app/", 
   methods: ["GET", "POST", "DELETE"],
   credentials: true
 }));
